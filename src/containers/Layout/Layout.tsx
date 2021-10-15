@@ -23,14 +23,13 @@ import DoneIcon from "@material-ui/icons/DoneAllTwoTone";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RevertIcon from "@material-ui/icons/NotInterestedOutlined";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import AddIcon from "@mui/icons-material/Add";
+
 import { MuiThemeProvider, makeStyles } from "@material-ui/core/styles";
 import { backgroundTheme } from "./Themes";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Grid from "@mui/material/Grid";
 
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogTitle from "@mui/material/DialogTitle";
 import { RegistrationDialog } from "../../components/RegistrationDialog/RegistrationDialog";
 import AppBar from "@material-ui/core/AppBar";
 
@@ -73,10 +72,11 @@ const useStyles = makeStyles((theme) => ({
     height: 40,
   },
   tableHead: {
-    backgroundColor: "#2f405c",
+    backgroundColor: "#fffff",
   },
   // button: {
-  //   backgroundColor: "#0000",
+  //   color: "#0000",
+  //   marginLeft: theme.spacing(2),
   // },
   toolbar: {
     paddingRight: 24,
@@ -285,22 +285,29 @@ export const Layout = () => {
               </Toolbar>
             </AppBar>
           </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} className={classes.grid}>
             <Button
-              variant="outlined"
+              variant="contained"
               onClick={handleClickOpen}
               // className={classes.button}
-              color="primary"
+              // color="primary"
+              style={{
+                borderRadius: 35,
+                backgroundColor: "#f79d48",
+                color: "#000000",
+                marginTop: "5%",
+              }}
             >
+              <AddIcon></AddIcon>
               Add Customer
             </Button>
-            <RegistrationDialog
-              open={openDialog}
-              setData={setData}
-              handleDialogState={setOpenDialog}
-              addCustomer={addCustomer}
-            />
           </Grid>
+          <RegistrationDialog
+            open={openDialog}
+            setData={setData}
+            handleDialogState={setOpenDialog}
+            addCustomer={addCustomer}
+          />
           <Grid item xs={12} className={classes.grid}>
             <div className={classes.body}>
               <Paper className={classes.paper}>
