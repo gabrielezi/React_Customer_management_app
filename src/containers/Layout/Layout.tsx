@@ -2,9 +2,16 @@ import React from "react";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
+import {
+  Toolbar,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+} from "@material-ui/core";
+// import Table from "@material-ui/core/Table";
+// import TableBody from "@material-ui/core/TableBody";
+// import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Input from "@material-ui/core/Input";
@@ -15,6 +22,7 @@ import EditIcon from "@material-ui/icons/EditOutlined";
 import DoneIcon from "@material-ui/icons/DoneAllTwoTone";
 import DeleteIcon from "@mui/icons-material/Delete";
 import RevertIcon from "@material-ui/icons/NotInterestedOutlined";
+import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import { MuiThemeProvider, makeStyles } from "@material-ui/core/styles";
 import { backgroundTheme } from "./Themes";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -23,6 +31,8 @@ import Grid from "@mui/material/Grid";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogTitle from "@mui/material/DialogTitle";
+import { RegistrationDialog } from "../../components/RegistrationDialog/RegistrationDialog";
+import AppBar from "@material-ui/core/AppBar";
 
 import useLocalStorage from "../../hooks/useLocalStorage";
 import useGeocoding from "../../hooks/useGeocoding";
@@ -65,6 +75,27 @@ const useStyles = makeStyles((theme) => ({
   tableHead: {
     backgroundColor: "#2f405c",
   },
+  // button: {
+  //   backgroundColor: "#0000",
+  // },
+  toolbar: {
+    paddingRight: 24,
+    backgroundColor: "#aac0e3",
+  },
+  title: {
+    // backgroundColor: "#0000",
+    flexGrow: 1,
+    fontSize: 36,
+    fontFamily: "Corbel",
+    // textDecoration: "underline",
+  },
+  body: {
+    height: "100%",
+  },
+  titleIcon: {
+    transform: "scale(1.6)",
+    marginRight: theme.spacing(2),
+  },
 }));
 
 const createData = (
@@ -73,7 +104,9 @@ const createData = (
   city: any,
   street: any,
   houseNumber: any,
-  zipCode: any
+  zipCode: any,
+  latitude: any,
+  longitude: any
 ) => ({
   id: fullName.replace(" ", "_"),
   fullName,
@@ -82,6 +115,8 @@ const createData = (
   street,
   houseNumber,
   zipCode,
+  latitude,
+  longitude,
   isEditMode: false,
 });
 
@@ -95,37 +130,66 @@ export const Layout = () => {
   const [zipCode, setZipCode] = React.useState<string>("");
 
   const [data, setData] = useLocalStorage("customer");
-  const { data1, sendRequest } = useGeocoding(getCoordinatesHttpRequest);
-  // const [location, setLocation] = useGeocoding();
+  const { requestData, sendRequest, loading } = useGeocoding(
+    getCoordinatesHttpRequest
+  );
 
+  const [latitude, setLatitude] = React.useState<number>(0);
+  const [longitude, setLongitude] = React.useState<number>(0);
+  const [dataEntered, setDataEntered] = React.useState<boolean>(false);
   const [previous, setPrevious] = React.useState({});
 
-  const addCustomer = () => {
-    const newData = createData(
-      fullName,
-      email,
-      city,
-      street,
-      houseNumber,
-      zipCode
-    );
+  const [openDialog, setOpenDialog] = React.useState(false);
 
-    if (data === undefined || data === null) {
-      setData([newData]);
-    } else {
-      setData([...data, newData]);
+  React.useEffect(() => {
+    if (!loading && dataEntered) {
+      if (requestData !== null) {
+        setLatitude(requestData["data"][0]["latitude"]);
+        setLongitude(requestData["data"][0]["longitude"]);
+      }
+
+      const newData = createData(
+        fullName,
+        email,
+        city,
+        street,
+        houseNumber,
+        zipCode,
+        latitude,
+        longitude
+      );
+
+      if (data === undefined || data === null) {
+        setData([newData]);
+      } else {
+        setData([...data, newData]);
+      }
+      setOpenDialog(false);
+      setDataEntered(false);
     }
-    setOpenDialog(false);
+  }, [loading]);
+
+  const addCustomer = (
+    fullName: string,
+    email: string,
+    city: string,
+    street: string,
+    houseNumber: string,
+    zipCode: string
+  ) => {
+    setFullName(fullName);
+    setEmail(email);
+    setCity(city);
+    setStreet(street);
+    setHouseNumber(houseNumber);
+    setZipCode(zipCode);
+
+    setDataEntered(true);
     const address = street + " " + houseNumber + "," + city;
     sendRequest(address);
-    console.log(data1);
-    // setLocation(city, street, houseNumber, zipCode);
-    // console.log(location);
-    // getCoordinates();
   };
 
   const onToggleEditMode = (id: any) => {
-    console.log(data);
     setData((state) => {
       return data.map((row) => {
         if (row.id === id) {
@@ -135,7 +199,6 @@ export const Layout = () => {
         return row;
       });
     });
-    console.log(data);
   };
 
   const onChange = (e, row) => {
@@ -162,7 +225,6 @@ export const Layout = () => {
       return row;
     });
     console.log(newdata);
-    console.log(previous);
     setData(newdata);
     setPrevious((state) => {
       delete state[id];
@@ -176,20 +238,14 @@ export const Layout = () => {
     setData(newList);
   };
 
-  const [openDialog, setOpenDialog] = React.useState(false);
-
   const handleClickOpen = () => {
     setOpenDialog(true);
-  };
-
-  const handleClose = () => {
-    setOpenDialog(false);
   };
 
   const CustomTableCell = ({ row, name, onChange }: any) => {
     const { isEditMode } = row;
     return (
-      <TableCell align="left" className={classes.tableCell}>
+      <TableCell align="center" className={classes.tableCell}>
         {isEditMode ? (
           <Input
             value={row[name]}
@@ -208,137 +264,130 @@ export const Layout = () => {
     <MuiThemeProvider theme={backgroundTheme}>
       <div className={classes.root}>
         <CssBaseline />
-        <Grid container spacing={2}>
-          <Grid item xs={12} className={classes.grid}>
-            <Button variant="outlined" onClick={handleClickOpen}>
+        <Grid container spacing={6}>
+          <Grid item xs={12}>
+            <AppBar
+              color="secondary"
+              position="fixed"
+              className={classes.toolbar}
+            >
+              <Toolbar>
+                <PersonAddIcon className={classes.titleIcon} />
+                <Typography
+                  component="h1"
+                  variant="h3"
+                  color="inherit"
+                  noWrap
+                  className={classes.title}
+                >
+                  Customer Management
+                </Typography>
+              </Toolbar>
+            </AppBar>
+          </Grid>
+          <Grid item xs={12}>
+            <Button
+              variant="outlined"
+              onClick={handleClickOpen}
+              // className={classes.button}
+              color="primary"
+            >
               Add Customer
             </Button>
-            <Dialog open={openDialog} onClose={handleClose}>
-              <DialogTitle>Subscribe</DialogTitle>
-              <Box
-                component="form"
-                sx={{
-                  "& .MuiTextField-root": { m: 1, width: "25ch" },
-                }}
-                noValidate
-                autoComplete="off"
-              >
-                <TextField
-                  required
-                  id="outlined-required"
-                  label="Full Name"
-                  name="fullName"
-                  onChange={(event) => setFullName(event.target.value)}
-                />
-                <TextField
-                  required
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  onChange={(event) => setEmail(event.target.value)}
-                />
-                <TextField
-                  required
-                  id="outlined-required"
-                  label="City"
-                  onChange={(event) => setCity(event.target.value)}
-                />
-                <TextField
-                  required
-                  id="outlined-required"
-                  label="Street"
-                  onChange={(event) => setStreet(event.target.value)}
-                />
-                <TextField
-                  required
-                  id="outlined-required"
-                  label="House number"
-                  onChange={(event) => setHouseNumber(event.target.value)}
-                />
-                <TextField
-                  required
-                  id="outlined-required"
-                  label="Zip Code"
-                  onChange={(event) => setZipCode(event.target.value)}
-                />
-              </Box>
-              <DialogActions>
-                <Button onClick={handleClose}>Cancel</Button>
-                <Button onClick={addCustomer}>Add</Button>
-              </DialogActions>
-            </Dialog>
+            <RegistrationDialog
+              open={openDialog}
+              setData={setData}
+              handleDialogState={setOpenDialog}
+              addCustomer={addCustomer}
+            />
           </Grid>
           <Grid item xs={12} className={classes.grid}>
-            <Paper className={classes.paper}>
-              <Table className={classes.table}>
-                <caption>Current customer list</caption>
-                <TableHead className={classes.tableHead}>
-                  <TableRow>
-                    <TableCell align="left" />
-                    <TableCell align="left">Full name</TableCell>
-                    <TableCell align="left">Email</TableCell>
-                    <TableCell align="left">City</TableCell>
-                    <TableCell align="left">Street</TableCell>
-                    <TableCell align="left">House number</TableCell>
-                    <TableCell align="left">Zip Code</TableCell>
-                    <TableCell align="left">Latitude</TableCell>
-                    <TableCell align="left">Longitude</TableCell>
-                    <TableCell align="left" />
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data?.map((row) => (
-                    <TableRow key={row.id}>
-                      <TableCell className={classes.selectTableCell}>
-                        {row.isEditMode ? (
-                          <>
+            <div className={classes.body}>
+              <Paper className={classes.paper}>
+                <Table className={classes.table}>
+                  <caption>Current customer list</caption>
+                  <TableHead className={classes.tableHead}>
+                    <TableRow>
+                      <TableCell align="center" />
+                      <TableCell align="center">Full name</TableCell>
+                      <TableCell align="center">Email</TableCell>
+                      <TableCell align="center">City</TableCell>
+                      <TableCell align="center">Street</TableCell>
+                      <TableCell align="center">House number</TableCell>
+                      <TableCell align="center">Zip Code</TableCell>
+                      <TableCell align="center">Latitude</TableCell>
+                      <TableCell align="center">Longitude</TableCell>
+                      <TableCell align="center" />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {data?.map((row) => (
+                      <TableRow key={row.id}>
+                        <TableCell className={classes.selectTableCell}>
+                          {row.isEditMode ? (
+                            <>
+                              <IconButton
+                                aria-label="done"
+                                color="secondary"
+                                onClick={() => onToggleEditMode(row.id)}
+                              >
+                                <DoneIcon />
+                              </IconButton>
+                              <IconButton
+                                aria-label="revert"
+                                color="secondary"
+                                onClick={() => onRevert(row.id)}
+                              >
+                                <RevertIcon />
+                              </IconButton>
+                            </>
+                          ) : (
                             <IconButton
-                              aria-label="done"
+                              aria-label="delete"
+                              color="secondary"
                               onClick={() => onToggleEditMode(row.id)}
                             >
-                              <DoneIcon />
+                              <EditIcon />
                             </IconButton>
-                            <IconButton
-                              aria-label="revert"
-                              onClick={() => onRevert(row.id)}
-                            >
-                              <RevertIcon />
-                            </IconButton>
-                          </>
-                        ) : (
+                          )}
+                        </TableCell>
+                        <CustomTableCell
+                          {...{ row, name: "fullName", onChange }}
+                        />
+                        <CustomTableCell
+                          {...{ row, name: "email", onChange }}
+                        />
+                        <CustomTableCell {...{ row, name: "city", onChange }} />
+                        <CustomTableCell
+                          {...{ row, name: "street", onChange }}
+                        />
+                        <CustomTableCell
+                          {...{ row, name: "houseNumber", onChange }}
+                        />
+                        <CustomTableCell
+                          {...{ row, name: "zipCode", onChange }}
+                        />
+                        <CustomTableCell
+                          {...{ row, name: "latitude", onChange }}
+                        />
+                        <CustomTableCell
+                          {...{ row, name: "longitude", onChange }}
+                        />
+                        <TableCell className={classes.selectTableCell}>
                           <IconButton
                             aria-label="delete"
-                            onClick={() => onToggleEditMode(row.id)}
+                            color="secondary"
+                            onClick={() => deleteCustomer(row.id)}
                           >
-                            <EditIcon />
+                            <DeleteIcon />
                           </IconButton>
-                        )}
-                      </TableCell>
-                      <CustomTableCell
-                        {...{ row, name: "fullName", onChange }}
-                      />
-                      <CustomTableCell {...{ row, name: "email", onChange }} />
-                      <CustomTableCell {...{ row, name: "city", onChange }} />
-                      <CustomTableCell {...{ row, name: "street", onChange }} />
-                      <CustomTableCell
-                        {...{ row, name: "houseNumber", onChange }}
-                      />
-                      <CustomTableCell
-                        {...{ row, name: "zipCode", onChange }}
-                      />
-                      <TableCell className={classes.selectTableCell}>
-                        <IconButton
-                          aria-label="delete"
-                          onClick={() => deleteCustomer(row.id)}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Paper>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </Paper>
+            </div>
           </Grid>
         </Grid>
         {/* </Paper> */}

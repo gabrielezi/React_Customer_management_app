@@ -9,13 +9,14 @@ export default function useGeocoding<T>(
     func: (...args: any[]) => Promise<T>
   ) {
     const [loading, setLoading] = React.useState<boolean>(false);
-    const [data1, setData] = React.useState<T | null>(null);
+    const [requestData, setData] = React.useState<T | null>(null);
   
     function sendRequest  (...args: any[]) {
       try {
         setLoading(true);
         func(...args).then(x => {
           setData(x);
+          setLoading(false);
         });
       } catch (error) {
         console.log(error);
@@ -23,5 +24,5 @@ export default function useGeocoding<T>(
       }
     };
   
-    return { sendRequest, data1, loading };
+    return { sendRequest, requestData, loading };
   }

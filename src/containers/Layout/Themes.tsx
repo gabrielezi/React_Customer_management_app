@@ -7,11 +7,32 @@ export const backgroundTheme = createTheme({
       main: "#5893df",
     },
     secondary: {
-      main: "#2ec5d3",
+      main: "#65effc",
     },
     background: {
       default: "#192231",
       paper: "#24344d",
+    },
+  },
+});
+export const dialogTheme = createTheme({
+  overrides: {
+    MuiPaper: {
+      root: {
+        backgroundColor: "#c7ddff",
+      },
+    },
+  },
+  palette: {
+    secondary: {
+      main: "#db4d40",
+    },
+    action: {
+      hover: "#C594BD",
+    },
+    background: {
+      default: "#192231",
+      // paper: "#24344d",
     },
   },
 });
