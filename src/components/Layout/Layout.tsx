@@ -30,7 +30,7 @@ import Grid from "@mui/material/Grid";
 import { RegistrationDialog } from "../RegistrationDialog/RegistrationDialog";
 import useLocalStorageForArrays from "../../hooks/useLocalStorageForArrays";
 import { getCoordinatesHttpRequest } from "../../services/GeocodingService";
-import { Customer } from "../../models/customer";
+import { Customer } from "../../models/Customer";
 import { createNewGuid } from "../../services/UtilityService";
 
 const useStyles = makeStyles((theme) => ({
@@ -239,7 +239,7 @@ export const Layout = () => {
             <div className={classes.body}>
               <Paper className={classes.paper}>
                 <Table className={classes.table}>
-                  {customerList.length == 0 ? (
+                  {customerList.length === 0 ? (
                     <caption>- Customer list is empty -</caption>
                   ) : (
                     <caption>- Current Customer list -</caption>

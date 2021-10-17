@@ -32,7 +32,6 @@ export const dialogTheme = createTheme({
     },
     background: {
       default: "#192231",
-      // paper: "#24344d",
     },
   },
 });

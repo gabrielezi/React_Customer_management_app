@@ -1,5 +1,4 @@
-import { Location } from "../types/Location";
-import { Service } from "../types/Service";
+import { Location } from "../models/Location";
 import { GEOCODING_URL } from "../constants/requests";
 
 export const getCoordinatesHttpRequest = async (

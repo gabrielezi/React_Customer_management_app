@@ -12,7 +12,6 @@ import {
 import Grid from "@mui/material/Grid";
 import { dialogTheme } from "../Layout/Themes";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import { red } from "@mui/material/colors";
 
 const useStyles = makeStyles((theme) => ({
   grid: {
