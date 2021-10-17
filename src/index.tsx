@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import { Layout } from "./containers/Layout/Layout";
+import { Layout } from "./components/Layout/Layout";
 
 ReactDOM.render(
   <React.StrictMode>
