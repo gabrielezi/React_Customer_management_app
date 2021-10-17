@@ -117,7 +117,6 @@ export const Layout = () => {
       modifiedStreet + " " + houseNumber + "," + city + "," + zipCode;
 
     getCoordinatesHttpRequest(address).then((x) => {
-      console.log(x);
       const newCustomer: Customer = {
         id: createNewGuid(),
         fullName: fullName,
@@ -142,8 +141,15 @@ export const Layout = () => {
   };
 
   const onEditModeDone = (row: any) => {
-    editValueInCustomerList(row);
-    setSelectedCustomer(null);
+    const address =
+      row.street + " " + row.houseNumber + "," + row.city + "," + row.zipCode;
+    getCoordinatesHttpRequest(address).then((x) => {
+      row.latitude = x["data"][0]["latitude"];
+      row.longitude = x["data"][0]["longitude"];
+
+      editValueInCustomerList(row);
+      setSelectedCustomer(null);
+    });
   };
 
   const onChange = (e, row) => {
