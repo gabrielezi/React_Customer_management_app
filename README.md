@@ -38,3 +38,6 @@ New customer creation screen (with text field validation):
 
 Customers added (latitude and longitude were generated):
 ![customerList](./customerList.png)&nbsp;&nbsp;&nbsp;&nbsp;
+
+Editing a customer:
+![editing](./editing.png)&nbsp;&nbsp;&nbsp;&nbsp;
