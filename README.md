@@ -28,8 +28,16 @@ You can try out the program with such example data (or any data of your choice):
 
 Correct latitude and longitude should be generated for these addresses.
 
-## Example Screenshots
+## App Screenshots
 
+Initial program view:
 ![emptyCustomerList](./emptyCustomerList.png)&nbsp;&nbsp;&nbsp;&nbsp;
+
+New customer creation screen (with text field validation):
 ![addCustomerDialog](./addCustomerDialog.png)&nbsp;&nbsp;&nbsp;&nbsp;
+
+Customers added (latitude and longitude were generated):
 ![customerList](./customerList.png)&nbsp;&nbsp;&nbsp;&nbsp;
+
+Editing a customer:
+![editing](./editing.png)&nbsp;&nbsp;&nbsp;&nbsp;
