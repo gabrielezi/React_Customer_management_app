@@ -250,7 +250,6 @@ export const Layout = () => {
                   ) : (
                     <caption>- Current Customer list -</caption>
                   )}
-                  {/* <caption>- Editable Customer list -</caption> */}
                   <TableHead className={classes.tableHead}>
                     <TableRow>
                       <TableCell align="center" />

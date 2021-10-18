@@ -29,3 +29,7 @@ You can try out the program with such example data (or any data of your choice):
 Correct latitude and longitude should be generated for these addresses.
 
 ## Example Screenshots
+
+![emptyCustomerList](./emptyCustomerList.png)&nbsp;&nbsp;&nbsp;&nbsp;
+![addCustomerDialog](./addCustomerDialog.png)&nbsp;&nbsp;&nbsp;&nbsp;
+![customerList](./customerList.png)&nbsp;&nbsp;&nbsp;&nbsp;

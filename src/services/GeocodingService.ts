@@ -7,7 +7,5 @@ export const getCoordinatesHttpRequest = async (
   const response = await fetch(GEOCODING_URL + address);
   const data = (await response.json()) as Location;
 
-  console.log(data);
-
   return data;
 };
