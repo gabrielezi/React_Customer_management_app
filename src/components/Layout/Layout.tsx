@@ -114,7 +114,7 @@ export const Layout = () => {
     // the Geocoder does not recognize word "gatve" but works fine with "g."
     const modifiedStreet = street.replace("gatve", "g.").replace("gatvė", "g.");
     const address =
-      modifiedStreet + " " + houseNumber + "," + city + "," + zipCode;
+      modifiedStreet + " " + houseNumber + "," + city + " " + zipCode;
 
     getCoordinatesHttpRequest(address).then((x) => {
       const newCustomer: Customer = {
@@ -142,7 +142,7 @@ export const Layout = () => {
 
   const onEditModeDone = (row: any) => {
     const address =
-      row.street + " " + row.houseNumber + "," + row.city + "," + row.zipCode;
+      row.street + " " + row.houseNumber + "," + row.city + " " + row.zipCode;
     getCoordinatesHttpRequest(address).then((x) => {
       row.latitude = x["data"][0]["latitude"];
       row.longitude = x["data"][0]["longitude"];
