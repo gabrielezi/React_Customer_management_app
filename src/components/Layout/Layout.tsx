@@ -27,7 +27,7 @@ import { MuiThemeProvider, makeStyles } from "@material-ui/core/styles";
 import { backgroundTheme } from "./Themes";
 import Grid from "@mui/material/Grid";
 
-import { RegistrationDialog } from "../RegistrationDialog/RegistrationDialog";
+import { RegistrationDialog } from "../RegistrationDialog";
 import useLocalStorageForArrays from "../../hooks/useLocalStorageForArrays";
 import { getCoordinatesHttpRequest } from "../../services/GeocodingService";
 import { Customer } from "../../models/Customer";

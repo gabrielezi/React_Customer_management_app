@@ -1,0 +1,1 @@
+export { RegistrationDialog } from "./RegistrationDialog";

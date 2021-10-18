@@ -12,6 +12,7 @@ import {
 import Grid from "@mui/material/Grid";
 import { dialogTheme } from "../Layout/Themes";
 import CssBaseline from "@material-ui/core/CssBaseline";
+import { TopicDialogProps } from "./types";
 
 const useStyles = makeStyles((theme) => ({
   grid: {
@@ -40,21 +41,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type CreateTopicDialogProps = {
-  open: boolean;
-  handleDialogState: (state: boolean) => void;
-  addCustomer: (
-    fullName: string,
-    email: string,
-    city: string,
-    street: string,
-    houseNumber: string,
-    zipCode: string
-  ) => void;
-};
-
 export const RegistrationDialog = (
-  props: CreateTopicDialogProps
+  props: TopicDialogProps
 ): React.ReactElement => {
   const { open, handleDialogState, addCustomer } = props;
   const [fullName, setFullName] = React.useState<string>("");
